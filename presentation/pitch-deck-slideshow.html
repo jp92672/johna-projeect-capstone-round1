@@ -1,0 +1,440 @@
+<title>Berlin Salon Pitch Deck</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  :root{
+    --bg:#F7F1E6; --bg-alt:#EFE5D5; --ink:#221E1A; --ink-soft:#63594E;
+    --accent:#7C3040; --accent-soft:#C99098; --line:#DCCFBA; --warn:#A15A2A; --good:#4C6A52;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; height:100%; background:#0d0d0d; overflow:hidden; font-family:'Work Sans',system-ui,sans-serif;}
+  .stage{position:fixed; inset:0; display:flex; align-items:center; justify-content:center;}
+  .slide{width:1280px; height:720px; background:var(--bg); color:var(--ink); position:relative; padding:64px 76px; overflow:hidden; flex:0 0 auto; display:none; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+  .slide.active{display:flex;}
+  .body{flex:1; display:flex; flex-direction:column; justify-content:center; min-height:0;}
+  .eyebrow{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);}
+  .display{font-family:'Instrument Serif',Georgia,serif;}
+  .footer{position:absolute;left:76px;bottom:32px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;color:var(--ink-soft);letter-spacing:0.05em;}
+  .pagenum{position:absolute;right:76px;bottom:32px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;color:var(--ink-soft);}
+  .rule{height:1px;background:var(--line);}
+  .axislabel{font-family:'IBM Plex Mono',monospace; font-size:11px; fill:var(--ink-soft);}
+  .vallabel{font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; fill:var(--ink);}
+
+  .item{display:flex; gap:14px; align-items:baseline; margin-bottom:14px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex:0 0 auto; transform:translateY(-4px);}
+
+  .funnel-row{display:flex; align-items:center; gap:28px; margin-bottom:12px;}
+  .funnel-track{width:520px; display:flex; justify-content:flex-start;}
+  .funnel-bar{height:52px; display:flex; align-items:center; padding:0 24px; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.04em;}
+  .funnel-label{width:320px; flex:0 0 auto; text-align:right;}
+  .funnel-label .num{font-family:'Instrument Serif',Georgia,serif; font-size:34px; line-height:1.1; color:var(--accent);}
+  .funnel-label .txt{font-size:12.5px; color:var(--ink-soft); margin-top:2px;}
+
+  .bar-col{flex:0 0 auto; display:flex; flex-direction:column; align-items:center;}
+  .bar{width:180px; display:flex; align-items:flex-end; justify-content:center; padding-bottom:14px; font-family:'IBM Plex Mono',monospace; font-weight:600;}
+  .impact-note{margin-top:24px; padding:14px 20px; background:#F3E9DE; border:1px solid var(--line); font-size:12.5px; color:var(--ink-soft); max-width:900px;}
+
+  .flagbox{margin-top:22px; padding:10px 14px; background:#F3E9DE; border:1px solid var(--line); font-size:12px; color:var(--ink-soft); max-width:480px;}
+
+  .card{flex:1; border-top:2px solid var(--accent); padding-top:14px; display:flex; flex-direction:column; gap:10px;}
+  .num{font-family:'Instrument Serif',Georgia,serif; font-size:36px; color:var(--accent-soft); line-height:1;}
+  .card-title{font-size:17px; font-weight:600; line-height:1.2;}
+  .label{font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:3px;}
+  .text{font-size:12.5px; line-height:1.45; color:var(--ink);}
+  .fitbox{margin-top:10px; background:var(--bg-alt); padding:10px 12px; font-size:11.5px; line-height:1.4;}
+
+  .rrow{display:flex; gap:36px; padding:20px 0; border-bottom:1px solid var(--line); align-items:flex-start;}
+  .rrow:first-of-type{padding-top:0;}
+  .rlabel{flex:0 0 300px; font-size:15px; font-weight:600;}
+  .rtext{flex:1; font-size:14.5px; line-height:1.6; color:var(--ink-soft);}
+  .rtext strong{color:var(--ink);}
+
+  .step{flex:1; background:var(--bg-alt); border:1px solid var(--line); padding:14px 12px; text-align:center; font-size:12px; line-height:1.4;}
+  .arrow{display:flex; align-items:center; color:var(--accent-soft); font-size:20px;}
+  .mkpi{flex:1; text-align:center;}
+  .mkpi .num{font-family:'Instrument Serif',Georgia,serif; font-size:32px; color:var(--accent);}
+  .mkpi .lbl{font-size:12px; color:var(--ink-soft); margin-top:4px;}
+
+  .kpi{flex:1; background:var(--bg-alt); border:1px solid var(--line); padding:18px 20px;}
+  .kpi .num{font-family:'Instrument Serif',Georgia,serif; font-size:32px; color:var(--accent);}
+  .kpi .lbl{font-size:12px; color:var(--ink-soft); margin-top:6px; line-height:1.4;}
+
+  /* nav chrome */
+  .navbar{position:fixed; left:0; right:0; bottom:0; height:64px; display:flex; align-items:center; justify-content:center; gap:18px; z-index:10;}
+  .navbtn{width:40px; height:40px; border-radius:50%; border:1px solid #444; background:#1a1a1a; color:#eee; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;}
+  .navbtn:hover{background:#2a2a2a;}
+  .navbtn:disabled{opacity:0.3; cursor:default;}
+  .counter{font-family:'IBM Plex Mono',monospace; color:#bbb; font-size:13px; min-width:60px; text-align:center;}
+  .hint{position:fixed; top:18px; right:24px; font-family:'IBM Plex Mono',monospace; color:#888; font-size:11px; z-index:10;}
+</style>
+
+<div class="stage" id="stage"></div>
+
+<div class="navbar">
+  <button class="navbtn" id="prevBtn" aria-label="Previous slide">&#8592;</button>
+  <div class="counter" id="counter">1 / 10</div>
+  <button class="navbtn" id="nextBtn" aria-label="Next slide">&#8594;</button>
+</div>
+<div class="hint">&larr; &rarr; or click to navigate</div>
+
+<script>
+const slides = [];
+
+slides.push(`
+<div class="eyebrow">Round 1 Pitch &nbsp;&middot;&nbsp; AI Consulting Engagement</div>
+<div style="position:absolute; left:76px; top:220px; right:76px;">
+  <div class="display" style="font-size:88px; line-height:1.02; color:var(--ink); max-width:980px;">A simpler way<br>to growth.</div>
+  <div style="width:120px; height:2px; background:var(--accent); margin:32px 0 28px;"></div>
+  <div style="font-size:20px; color:var(--ink-soft); max-width:640px; line-height:1.5;">AI-assisted operations for a premium independent hair salon in Berlin.</div>
+</div>
+<div style="position:absolute; right:76px; top:64px; text-align:right;"><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);">31 August 2026</div></div>
+<div class="footer">Prepared by John Adams &nbsp;&middot;&nbsp; for Chleo Hair Studios</div>
+<div class="pagenum">01 / 10</div>
+`);
+
+slides.push(`
+<div class="eyebrow">Context</div>
+<div class="display" style="font-size:40px; margin-top:14px;">Meet the client</div>
+<div class="rule" style="margin:20px 0 36px;"></div>
+<div class="body">
+<div style="display:flex; gap:64px;">
+  <div style="flex:1; max-width:480px;">
+    <div style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:16px;">The business</div>
+    <div class="item"><div class="dot"></div><div>Independent, appointment-only hair salon in Prenzlauer Berg, Berlin</div></div>
+    <div class="item"><div class="dot"></div><div>High-end positioning: &euro;90&ndash;115 cuts, &euro;145&ndash;275 color services</div></div>
+    <div class="item"><div class="dot"></div><div>2 owner-operators, 2 chair renters, <strong>zero employees</strong></div></div>
+    <div class="item"><div class="dot"></div><div>4 chairs, open Tue&ndash;Sat, reliably booked ~1 week ahead</div></div>
+    <div class="item"><div class="dot"></div><div>5-star Google rating (29 reviews); combined ~2.8k Instagram followers</div></div>
+    <div style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); margin:28px 0 14px;">What we want to solve for</div>
+    <div style="display:flex; gap:10px;">
+      <div style="background:var(--bg-alt); border:1px solid var(--line); padding:10px 14px; font-size:13px;">Capture every booking</div>
+      <div style="background:var(--bg-alt); border:1px solid var(--line); padding:10px 14px; font-size:13px;">Protect booked chair-time</div>
+      <div style="background:var(--bg-alt); border:1px solid var(--line); padding:10px 14px; font-size:13px;">Grow client lifetime value</div>
+    </div>
+  </div>
+  <div style="flex:1; background:var(--ink); color:var(--bg); padding:44px 40px; display:flex; flex-direction:column; justify-content:space-between; max-width:520px;">
+    <div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent-soft); margin-bottom:20px;">The founder's fear</div>
+      <div class="display" style="font-size:34px; line-height:1.3; font-style:italic;">&ldquo;What even is the AI? How would I sign up?&rdquo;</div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="footer">Round 1 Pitch &nbsp;&middot;&nbsp; John Adams</div>
+<div class="pagenum">02 / 10</div>
+`);
+
+slides.push(`
+<div class="eyebrow">Market Size</div>
+<div class="display" style="font-size:38px; margin-top:12px;">Berlin Market Size</div>
+<div class="rule" style="margin:16px 0 26px;"></div>
+<div class="body">
+<div style="font-size:15px; color:var(--ink-soft); max-width:900px; margin-bottom:8px;">Total market in Berlin, narrowed down to the number of clients the salon actually needs to reach a strong 82% chair utilization rate.</div>
+<div style="font-size:12.5px; color:var(--ink-soft); max-width:900px; margin-bottom:22px;"><strong>Chair utilization</strong> is the share of available chair-hours that are actually booked and paid.</div>
+<div style="display:flex; flex-direction:column; align-items:flex-start; gap:0;">
+  <div class="funnel-row">
+    <div class="funnel-label">
+      <div class="num">3,700,577</div>
+      <div class="txt">Total addressable market (TAM)<br>All Berlin residents</div>
+    </div>
+    <div class="funnel-track"><div class="funnel-bar" style="width:520px; background:var(--bg-alt); border:1px solid var(--line); color:var(--ink-soft);">Everyone in the city</div></div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-label">
+      <div class="num">20,000&ndash;60,000</div>
+      <div class="txt">Serviceable addressable market (SAM)<br>Modeled estimate, not measured</div>
+    </div>
+    <div class="funnel-track"><div class="funnel-bar" style="width:320px; background:var(--accent-soft); color:var(--ink);">Realistic premium clients</div></div>
+  </div>
+  <div class="funnel-row">
+    <div class="funnel-label">
+      <div class="num">1,700&ndash;2,300</div>
+      <div class="txt">Serviceable obtainable market (SOM)<br>To run at 82% chair utilization</div>
+    </div>
+    <div class="funnel-track"><div class="funnel-bar" style="width:150px; background:var(--accent); color:var(--bg); font-weight:600;">What the salon needs</div></div>
+  </div>
+</div>
+<div style="margin-top:10px; font-size:12px; color:var(--ink-soft); max-width:900px;">82% sits between the industry average (67%) and top-performing salons (84%), a strong result, not a stretch target. See the Benchmark Gap slide.</div>
+<div style="margin-top:14px; padding:14px 20px; background:var(--bg-alt); border-left:3px solid var(--accent); font-size:14px; line-height:1.5; max-width:900px;">The salon needs 1,700 to 2,300 active clients, not a share of Berlin's 3.7 million residents.</div>
+</div>
+<div class="footer">Round 1 Pitch &nbsp;&middot;&nbsp; John Adams</div>
+<div class="pagenum">03 / 10</div>
+`);
+
+slides.push(`
+<div class="eyebrow">What This Is Worth</div>
+<div class="display" style="font-size:36px; margin-top:14px;">Salon Utilization Opportunity</div>
+<div class="rule" style="margin:18px 0 26px;"></div>
+<div class="body">
+<div style="font-size:15px; color:var(--ink-soft); max-width:900px; margin-bottom:30px;">Estimated yearly revenue for the salon at average vs. top-performing chair utilization, using the salon's own &euro;102/hour average cut price and 152 chair-hours/week.</div>
+<div style="display:flex; gap:56px; align-items:stretch; height:250px;">
+  <div class="bar-col">
+    <div class="bar" style="height:150px; background:var(--accent-soft); color:var(--ink); margin-top:auto;">&euro;498,609</div>
+    <div style="margin-top:12px; font-size:14px; color:var(--ink-soft); text-align:center;">Average salon<br>67% utilization</div>
+  </div>
+  <div class="bar-col">
+    <div class="bar" style="height:190px; background:var(--accent); color:var(--bg); margin-top:auto;">&euro;625,121</div>
+    <div style="margin-top:12px; font-size:14px; color:var(--ink-soft); text-align:center;">Top-performing salon<br>84% utilization</div>
+  </div>
+  <div style="flex:1; padding:0 28px; background:var(--ink); text-align:center; display:flex; flex-direction:column; justify-content:center;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent-soft); margin-bottom:6px;">The annual gap</div>
+    <div class="display" style="font-size:72px; color:#F2C9CF; line-height:1;">&euro;126,513</div>
+    <div style="font-size:13px; color:#D9CFC2; margin-top:8px;">between doing this the average way and doing it well</div>
+  </div>
+</div>
+<div class="impact-note"><strong>Note:</strong> this is a planning estimate, not a measured number. It uses one flat rate across all 4 chairs as a simplification, 2 of the salon's chairs are rented and priced independently by the renters. The real baseline still needs to be measured.</div>
+</div>
+<div class="footer">Round 1 Pitch &nbsp;&middot;&nbsp; John Adams</div>
+<div class="pagenum">04 / 10</div>
+`);
+
+slides.push(`
+<div class="eyebrow">Market Signal &nbsp;1 / 3</div>
+<div class="display" style="font-size:36px; margin-top:14px;">Haircuts are outpacing inflation</div>
+<div class="rule" style="margin:18px 0 30px;"></div>
+<div class="body">
+<div style="display:flex; gap:64px; align-items:center;">
+  <svg width="560" height="290" viewBox="0 0 560 290">
+    <line x1="0" y1="240" x2="560" y2="240" stroke="var(--line)" stroke-width="1"/>
+    <rect x="0" y="124.8" width="90" height="115.2" fill="#C7B99B"/>
+    <rect x="130" y="30.5" width="90" height="209.5" fill="#7C3040"/>
+    <rect x="260" y="30.5" width="90" height="209.5" fill="#7C3040"/>
+    <rect x="390" y="20" width="90" height="220" fill="#7C3040"/>
+    <text x="18" y="112" class="vallabel">+2.2%</text><text x="150" y="18" class="vallabel">+4.0%</text>
+    <text x="280" y="18" class="vallabel">+4.0%</text><text x="410" y="8" class="vallabel">+4.2%</text>
+    <text x="8" y="262" class="axislabel">General</text><text x="8" y="276" class="axislabel">inflation</text>
+    <text x="140" y="262" class="axislabel">Women's</text><text x="145" y="276" class="axislabel">cuts</text>
+    <text x="270" y="262" class="axislabel">Men's</text><text x="272" y="276" class="axislabel">cuts</text>
+    <text x="395" y="262" class="axislabel">Children's</text><text x="403" y="276" class="axislabel">cuts</text>
+  </svg>
+  <div style="flex:1;">
+    <div style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:18px;">Why this matters</div>
+    <div style="font-size:16px; line-height:1.7; color:var(--ink);">In 2024, German haircut prices rose <strong>4.0&ndash;4.2%</strong>, nearly double the country's general inflation rate of 2.2%. This confirms what the briefing already suggested (7.2&ndash;7.6% price growth in 2023) and indicates real willingness to pay more in this segment.</div>
+    <div style="margin-top:24px; padding:18px 20px; background:var(--bg-alt); border-left:3px solid var(--accent); font-size:15px; line-height:1.55;">Every point of price growth raises the cost of an empty chair. Protecting booked hours, not just filling them, is worth more every year.</div>
+  </div>
+</div>
+</div>
+<div class="footer">Source: Statistisches Bundesamt &middot; Branchenbericht 2024/2025</div>
+<div class="pagenum">05 / 10</div>
+`);
+
+slides.push(`
+<div class="eyebrow">Market Signal &nbsp;2 / 3</div>
+<div class="display" style="font-size:36px; margin-top:14px;">The gap between average and top performers</div>
+<div class="rule" style="margin:18px 0 30px;"></div>
+<div class="body">
+<div style="display:flex; gap:56px;">
+  <svg width="470" height="290" viewBox="0 0 470 290">
+    <line x1="0" y1="240" x2="430" y2="240" stroke="var(--line)" stroke-width="1"/>
+    <rect x="0" y="64.5" width="50" height="175.5" fill="#C7B99B"/>
+    <rect x="60" y="20" width="50" height="220" fill="#7C3040"/>
+    <text x="0" y="56" class="vallabel">67%</text><text x="62" y="12" class="vallabel">84%</text><text x="4" y="260" class="axislabel">Utilization</text>
+    <rect x="180" y="161.4" width="50" height="78.6" fill="#C7B99B"/>
+    <rect x="240" y="85.5" width="50" height="154.5" fill="#7C3040"/>
+    <text x="180" y="153" class="vallabel">30%</text><text x="242" y="77" class="vallabel">59%</text><text x="176" y="260" class="axislabel">Online booking</text>
+    <rect x="360" y="213.8" width="50" height="26.2" fill="#C7B99B"/>
+    <rect x="420" y="161.4" width="50" height="78.6" fill="#7C3040"/>
+    <text x="358" y="206" class="vallabel">10%</text><text x="418" y="153" class="vallabel">30%</text><text x="352" y="260" class="axislabel">Rebook 24h</text>
+  </svg>
+  <div style="flex:1;">
+    <div style="display:flex; gap:18px; align-items:center; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-soft);"><span style="width:12px; height:12px; background:#C7B99B; display:inline-block;"></span>Average</div>
+      <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-soft);"><span style="width:12px; height:12px; background:#7C3040; display:inline-block;"></span>Top performer</div>
+    </div>
+    <div style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:14px;">Why this matters</div>
+    <div style="font-size:16px; line-height:1.7;">Even without this salon's own baseline yet, industry benchmarks show top-performing salons out-executing the average by double digits on exactly the levers our three use cases target: keeping chairs full, capturing bookings directly, and getting clients rebooked before they leave.</div>
+    <div style="display:flex; gap:16px; margin-top:24px;">
+      <div style="flex:1; background:var(--bg-alt); border:1px solid var(--line); padding:16px;">
+        <div class="display" style="font-size:28px;">8%</div>
+        <div style="font-size:12px; color:var(--ink-soft); margin-top:4px;">Avg. cancellation rate</div>
+      </div>
+      <div style="flex:1; background:var(--bg-alt); border:1px solid var(--line); padding:16px;">
+        <div class="display" style="font-size:28px;">3%</div>
+        <div style="font-size:12px; color:var(--ink-soft); margin-top:4px;">Avg. no-show rate</div>
+      </div>
+    </div>
+    <div class="flagbox">Benchmarks on this slide are from Zenoti's 2025 platform data (US/Canada, 30,000+ businesses), directional, not Germany-specific. Used to illustrate that a gap exists in the industry.</div>
+  </div>
+</div>
+</div>
+<div class="footer">Source: Zenoti, Beauty &amp; Wellness Industry Statistics 2025</div>
+<div class="pagenum">06 / 10</div>
+`);
+
+slides.push(`
+<div class="eyebrow">Market Signal &nbsp;3 / 3</div>
+<div class="display" style="font-size:36px; margin-top:14px;">Fewer Salons, More Revenue</div>
+<div class="rule" style="margin:18px 0 30px;"></div>
+<div class="body">
+<div style="display:flex; gap:56px; align-items:center;">
+  <div>
+    <svg width="480" height="290" viewBox="0 0 480 290">
+      <line x1="0" y1="245" x2="480" y2="245" stroke="var(--line)" stroke-width="1"/>
+      <rect x="10"  y="78" width="70" height="167" fill="#C99098"/>
+      <rect x="120" y="85" width="70" height="160" fill="#C99098"/>
+      <rect x="230" y="55" width="70" height="190" fill="#C99098"/>
+      <rect x="340" y="43" width="70" height="202" fill="#7C3040"/>
+      <text x="14"  y="70" class="vallabel">&euro;6.21bn</text>
+      <text x="124" y="77" class="vallabel">&euro;5.92bn</text>
+      <text x="234" y="47" class="vallabel">&euro;7.07bn</text>
+      <text x="340" y="35" class="vallabel" font-weight="700">&euro;7.49bn</text>
+      <text x="30"  y="262" class="axislabel">2020</text>
+      <text x="140" y="262" class="axislabel">2021</text>
+      <text x="250" y="262" class="axislabel">2022</text>
+      <text x="360" y="262" class="axislabel">2023</text>
+      <polyline points="45,45 155,40 265,110 375,115" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-dasharray="5,4"/>
+      <circle cx="45"  cy="45"  r="5" fill="var(--ink)"/>
+      <circle cx="155" cy="40"  r="5" fill="var(--ink)"/>
+      <circle cx="265" cy="110" r="5" fill="var(--ink)"/>
+      <circle cx="375" cy="115" r="5" fill="var(--ink)"/>
+      <text x="14"  y="33" class="axislabel">80,989</text>
+      <text x="124" y="28" class="axislabel">81,029</text>
+      <text x="234" y="103" class="axislabel">80,556</text>
+      <text x="344" y="133" class="axislabel">80,476</text>
+    </svg>
+  </div>
+  <div style="flex:1;">
+    <div style="display:flex; gap:18px; align-items:center; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-soft);"><span style="width:12px; height:12px; background:#C99098; display:inline-block;"></span>Sector revenue</div>
+      <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-soft);"><span style="width:12px; height:2px; background:var(--ink); display:inline-block;"></span>Salon count</div>
+    </div>
+    <div style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:18px;">Why this matters</div>
+    <div style="font-size:16px; line-height:1.7; color:var(--ink);">From 2020 to 2023, the number of registered salons in Germany kept drifting down, while sector revenue climbed back up. Both trends, shown together.</div>
+    <div style="margin-top:24px; padding:18px 20px; background:var(--bg-alt); border-left:3px solid var(--accent); font-size:15px; line-height:1.55;">The market isn't growing by adding salons, it's consolidating value into fewer, more productive locations.</div>
+  </div>
+</div>
+</div>
+<div class="footer">Source: Statistisches Bundesamt &middot; Zentralverband des Deutschen Friseurhandwerks, Branchenbericht 2024/2025</div>
+<div class="pagenum">07 / 10</div>
+`);
+
+slides.push(`
+<div class="eyebrow">The Proposal</div>
+<div class="display" style="font-size:36px; margin-top:14px;">Three use cases, one operating logic</div>
+<div class="rule" style="margin:14px 0 22px;"></div>
+<div class="body">
+<div style="display:flex; gap:36px; height:480px;">
+  <div class="card"><div class="num">01</div><div class="card-title">AI Booking &amp; Inquiry Assistant</div>
+    <div><div class="label">Problem</div><div class="text">Calls, WhatsApp, email, and DMs bypass Acuity. The owner personally triages every one.</div></div>
+    <div><div class="label">Solution</div><div class="text">A conversational assistant checks real Acuity availability and responds directly, confirms, redirects, or explains when full.</div></div>
+    <div class="fitbox"><strong>Fit:</strong> No new hires, no complex integration. Proportionate to a 4-chair shop.</div></div>
+  <div class="card"><div class="num">02</div><div class="card-title">No-Show &amp; Cancellation Recovery</div>
+    <div><div class="label">Problem</div><div class="text">No-shows happen weekly to bi-weekly. The &euro;50 deposit covers the fee, not the lost chair-time.</div></div>
+    <div><div class="label">Solution</div><div class="text">Automated pre-appointment reminders, plus a waitlist that's pinged the moment a slot opens.</div></div>
+    <div class="fitbox"><strong>Fit:</strong> Fully automatable; recovers revenue that's currently just lost.</div></div>
+  <div class="card"><div class="num">03</div><div class="card-title">Retention &amp; Re-Engagement</div>
+    <div><div class="label">Problem</div><div class="text">Retail is light and inconsistent despite an upscale, exclusive product line.</div></div>
+    <div><div class="label">Solution</div><div class="text">Rebooking nudges, purchase-cadence reorder reminders, and simple rule-based product recommendations.</div></div>
+    <div class="fitbox"><strong>Fit:</strong> Turns existing loyalty into proactive revenue. No new staff or sales process.</div></div>
+</div>
+</div>
+<div class="footer">Round 1 Pitch &nbsp;&middot;&nbsp; John Adams</div>
+<div class="pagenum">08 / 10</div>
+`);
+
+slides.push(`
+<div class="eyebrow">POC + Monitoring &nbsp;&middot;&nbsp; Use Case 3</div>
+<div class="display" style="font-size:36px; margin-top:14px;">Retention &amp; Re-Engagement, Built and Tested</div>
+<div class="rule" style="margin:18px 0 26px;"></div>
+<div class="body">
+<div style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:12px;">The workflow (n8n)</div>
+<div style="display:flex; align-items:stretch; gap:8px; margin-bottom:28px;">
+  <div class="step">Client list<br><strong>Data Table</strong></div>
+  <div class="arrow">&rarr;</div>
+  <div class="step">8 weeks since visit? / 30 days since purchase?<br><strong>Two checks</strong></div>
+  <div class="arrow">&rarr;</div>
+  <div class="step">Drafts the message<br><strong>AI Agent</strong></div>
+  <div class="arrow">&rarr;</div>
+  <div class="step">Sends the email<br><strong>Resend</strong></div>
+</div>
+<div style="display:flex; gap:32px; margin-bottom:28px;">
+  <div style="flex:1.3; background:var(--ink); color:var(--bg); padding:24px 26px;">
+    <div style="font-size:14px; line-height:1.7;">5 test clients, mixed on purpose. 3 needed a rebooking nudge, 3 needed a reorder reminder, 1 needed both, 1 needed neither, and correctly got nothing.</div>
+    <div style="margin-top:14px; font-size:13px; font-style:italic; color:#D9CFC2; line-height:1.6;">&ldquo;Hi Lukas! Just a friendly reminder that you might be running low on your styling cream...&rdquo;</div>
+  </div>
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:14px; background:var(--bg-alt); border:1px solid var(--line); padding:20px 24px;">
+    <div style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft);">LangSmith monitoring</div>
+    <div style="display:flex; gap:8px;">
+      <div class="mkpi"><div class="num">12</div><div class="lbl">traces logged</div></div>
+      <div class="mkpi"><div class="num">0%</div><div class="lbl">error rate</div></div>
+      <div class="mkpi"><div class="num">$0.01</div><div class="lbl">total cost</div></div>
+    </div>
+    <div style="font-size:12.5px; color:var(--ink-soft); line-height:1.5;">Every AI-drafted message is logged and reviewable, this is what "the AI can be observed" looks like in practice, not just a claim.</div>
+  </div>
+</div>
+<div style="padding:16px 20px; background:#F3E9DE; border:1px solid var(--line); font-size:13px; color:var(--ink-soft); max-width:1080px;"><strong>What's demo vs. production:</strong> test data used fake purchase history and one test inbox instead of real clients. Monitoring of logs will be used to surface any issues in the message automation workflow.</div>
+</div>
+<div class="footer">Round 1 Pitch &nbsp;&middot;&nbsp; John Adams</div>
+<div class="pagenum">09 / 10</div>
+`);
+
+slides.push(`
+<div class="eyebrow">The Ask</div>
+<div class="display" style="font-size:36px; margin-top:14px;">Cost, Timeline, and the Next Step</div>
+<div class="rule" style="margin:18px 0 30px;"></div>
+<div class="body">
+<div style="display:flex; gap:20px; margin-bottom:60px;">
+  <div class="kpi"><div class="num">&euro;9,450</div><div class="lbl">One-time build for all 3 use cases (10.5 consultant days &times; &euro;900/day)</div></div>
+  <div class="kpi"><div class="num">4 weeks</div><div class="lbl">Kickoff to a working MVP covering all 3 use cases</div></div>
+  <div class="kpi"><div class="num">&euro;50&ndash;140<span style="font-size:16px;">/mo</span></div><div class="lbl">Ongoing tools (n8n, Twilio, LLM API), paid directly by the salon</div></div>
+</div>
+<div style="display:flex; gap:64px;">
+  <div style="flex:1;">
+    <div style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:16px;">Key assumptions</div>
+    <div style="font-size:15px; line-height:1.7; color:var(--ink);">&euro;900/day, our rate for automation and AI consulting work. The salon owns every tool account, we get admin access to configure them. Full breakdown in <em>cost_estimation/cost_analysis.md</em>.</div>
+    <div style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); margin:22px 0 10px;">Optional ongoing support</div>
+    <div style="font-size:14px; line-height:1.6; color:var(--ink-soft);">A monthly retainer (flat or 10&ndash;15% of tool spend) or pay-as-you-go at &euro;120/hour, no commitment either way.</div>
+  </div>
+  <div style="flex:1; background:var(--ink); color:var(--bg); padding:32px 34px; display:flex; flex-direction:column; justify-content:space-between;">
+    <div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent-soft); margin-bottom:16px;">Next Steps</div>
+      <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; line-height:1.4;">
+        <div style="display:flex; gap:10px;"><span style="color:var(--accent-soft);">1</span><span>Confirm which use case(s) to prioritize</span></div>
+        <div style="display:flex; gap:10px;"><span style="color:var(--accent-soft);">2</span><span>Sign off on scope, cost, and timeline</span></div>
+        <div style="display:flex; gap:10px;"><span style="color:var(--accent-soft);">3</span><span>Grant access to Acuity and the email/SMS provider</span></div>
+        <div style="display:flex; gap:10px;"><span style="color:var(--accent-soft);">4</span><span>Kick off discovery, Week 1</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="footer">Round 1 Pitch &nbsp;&middot;&nbsp; John Adams</div>
+<div class="pagenum">10 / 10</div>
+`);
+
+const stage = document.getElementById('stage');
+slides.forEach((html, i) => {
+  const d = document.createElement('div');
+  d.className = 'slide' + (i === 0 ? ' active' : '');
+  d.innerHTML = html;
+  stage.appendChild(d);
+});
+
+let current = 0;
+const els = document.querySelectorAll('.slide');
+const counter = document.getElementById('counter');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+function show(i) {
+  if (i < 0 || i >= els.length) return;
+  els[current].classList.remove('active');
+  current = i;
+  els[current].classList.add('active');
+  counter.textContent = (current + 1) + ' / ' + els.length;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === els.length - 1;
+}
+
+prevBtn.addEventListener('click', () => show(current - 1));
+nextBtn.addEventListener('click', () => show(current + 1));
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') show(current + 1);
+  if (e.key === 'ArrowLeft') show(current - 1);
+});
+document.getElementById('stage').addEventListener('click', (e) => {
+  const rect = document.getElementById('stage').getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  if (x > rect.width / 2) show(current + 1); else show(current - 1);
+});
+show(0);
+</script>
